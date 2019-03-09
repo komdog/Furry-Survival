@@ -1,0 +1,6 @@
+include("shared.lua")
+include("sh_scoreboard.lua")
+include("cl_hud.lua")
+include("cl_roundhud.lua")
+include("cl_furrytracker.lua")
+include("cl_sounds.lua")

@@ -1,0 +1,22 @@
+"Gamemode"
+{
+    "base"          "base"
+    "title"         "Furry Survival"
+    "maps"          "^yz_"
+    "menusystem"    "1"
+    "worhshopid"    ""
+
+    "settings"
+    {
+        1
+        {
+            "name"      "yz_"
+            "text"      "yiff"
+            "help"      "yiffs"
+            "type"      "numeric"
+            "default"   "1"
+        }
+    }
+
+
+}

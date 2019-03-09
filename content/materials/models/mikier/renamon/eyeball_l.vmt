@@ -1,0 +1,7 @@
+"eyes"
+{
+	"$basetexture" "models/mikier/renamon/renamon"
+	"$iris" "models/mikier/renamon/pupil_l"
+	"$halflambert" "1"
+	"$nodecal" "1"
+}
