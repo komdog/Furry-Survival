@@ -1,6 +1,7 @@
 function roundStart()
 
     if(roundActive == true) then return end
+    if(roundStarted == true) then return end
     print("Log: Attempting to Start Round")
 
     -- Get Alive
@@ -19,30 +20,40 @@ function roundStart()
         return 
     end
 
-    -- Round Inits
-    roundActive = true
-    lastHuman = false
+    -- Start Round
+    roundStarted = true
 
     print("---------- Game Start ----------")
 
 
     -- Start Game After 1 Second
-    timer.Simple(10, function()
+    
+
+    -- Start Game After 1 Second
+    
+    function setupGame()
+
+        if(roundStarted == false) then return end
+
 
         chosen = table.Random( player.GetAll() ) 
         print(chosen)
 
-        -- Active State
-        
 
         -- Cleanup
         game.CleanUpMap( false, {} )
 
         -- Display Message
-
         net.Start( "center_text", false )
             net.WriteString(chosen:Nick() .. " Has Been Chosen")
         net.Broadcast()
+
+        -- Timer Tick
+        net.Start( "starttimer", false )
+        net.Broadcast()
+
+        -- Set Active Round State
+        roundActive = true
 
         -- Spawn Players
         for k,ply in pairs(player.GetAll()) do
@@ -50,30 +61,35 @@ function roundStart()
             ply:Spawn()
         end
 
+        -- After Spawn Inits 
+        lastHuman = false
         furrySpawn = true
 
-        -- Round Check after intro
-        timer.Simple(7, function()
-            roundCheck()
-        end)
+        -- Round Timer
+        roundTimer = CurTime() + 300
 
+    end
 
-    end)
+    timer.Simple(10, setupGame)
+
+    
 
 end
 
+
 function roundCheck()
 
-    -- Get Alive
-    local AllAlive = 0
-    for k ,v in pairs(player.GetAll()) do
-        if(v:Alive()) then
-            AllAlive = AllAlive + 1
-        end
-    end
-
-    if(AllAlive < 1) then return end
     if(roundActive == false) then return end
+
+
+        -- Get Alive
+        local AllAlive = 0
+        for k ,v in pairs(player.GetAll()) do
+            if(v:Alive()) then
+                AllAlive = AllAlive + 1
+            end
+        end
+    if(AllAlive < 1) then return end
 
     -- End game if less than 
     if(table.Count(player.GetAll()) < 1 && roundActive == false) then
@@ -110,12 +126,8 @@ function roundCheck()
     -- Get Humans Alive
     local hAlive = nAlive + acAlive
 
-    print("---------- Alive Data ----------")
-    print("Total Alive Players: " .. fAlive)
-    print("Total Alive Humans: " .. hAlive)
-    print("Furries: " .. fAlive .. " | Normies: " .. nAlive .. " | AC: " .. acAlive)
-
     -- if(fAlive == 0) then roundEnd("Animal Control") end
+    if(CurTime() > roundTimer ) then roundEnd("Normies") end
     if(acAlive == 0 && nAlive == 0) then roundEnd("FurrGang") end
 
     if(hAlive == 1) then  
@@ -137,11 +149,10 @@ function roundCheck()
 
         -- Text w/ Net Delay
 
-        timer.Simple(1, function()
-            net.Start( "center_text", false )
-                net.WriteString("LAST HUMAN")
-            net.Broadcast()
-        end)
+        net.Start( "center_text", false )
+            net.WriteString("LAST HUMAN")
+        net.Broadcast()
+
 
         lastHuman = true
 
@@ -154,6 +165,7 @@ function roundEnd(winners)
     -- Change Round State
     roundActive = false
     furrySpawn = false
+    roundStarted = false
 
     -- Sound Stop
     net.Start( "stopall", false )

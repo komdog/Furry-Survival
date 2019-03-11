@@ -5,39 +5,26 @@ local teams = {}
 teams[0] = {
     name = "Waiting", 
     color = Vector(0.5, 0.5, 0.5), 
-    health = {
-        hp = 100,
-        maxhp = 100
-    },
+    health = {hp = 100,maxhp = 100},
     weapons = {},
-    model = {
-        'models/player/Group02/male_06.mdl'
-    },
+    model = {'models/player/Group02/male_06.mdl'},
     move = { walk = 200, run = 200, jump = 200}
 }
 
 teams[1] = {
     name = "Furries", 
     color = Vector(1, 0, 0), 
-    health = {
-        hp = 200,
-        maxhp = 200 
-    },
+    health = {hp = 200,maxhp = 200 },
     weapons = {'weapon_yiffgun'},
-    model = {
-        'models/player/mikier/renamon.mdl'
-    },
+    model = {'models/player/mikier/renamon.mdl'},
     move = { walk = 300, run = 300, jump = 300}
 }
 
 teams[2] = {
     name = "Normies", 
     color = Vector(0.8, 0.4, 1), 
-    health = {
-        hp = 100,
-        maxhp = 100
-    },
-    weapons = {},
+    health = {hp = 100,maxhp = 100},
+    weapons = {"weapon_crowbar"},
     model = {"models/player/Group02/male_06.mdl"},
     move = { walk = 200, run = 200, jump = 200}
 }
@@ -45,11 +32,11 @@ teams[2] = {
 teams[3] = {
     name = "Animal Control", 
     color = Vector(0, 1, 0), 
-    health = {
-        hp = 150,
-        maxhp = 150
+    health = {hp = 150,maxhp = 150},
+    weapons = {
+        'weapon_smg1',
+        'weapon_stunstick'
     },
-    weapons = {'weapon_smg1'},
     model = {"models/player/combine_soldier_prisonguard.mdl"},
     move = { walk = 180, run = 180, jump = 200}
 }

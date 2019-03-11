@@ -13,6 +13,13 @@
 		surface.DrawPoly( cir )
     end
 
+    local triangle = {
+        { x = 100, y = 200 },
+        { x = 150, y = 100 },
+        { x = 200, y = 200 }
+
+    }
+
 
      hook.Add( "HUDPaint", "Wallhack", function()
 
@@ -21,13 +28,26 @@
          
         if ply:Team() == 1 then
 
+            for k,v in pairs ( team.GetPlayers(1) ) do
+                local Position = ( v:GetPos() + Vector( 0,0,80 ) ):ToScreen()
+                if (v:Alive() && v:Team() != 0) then
+                Speed = ply:GetVelocity():Length()
+                local a = 255
+                surface.SetDrawColor( 255,00,0, a )
+                surface.DrawTexturedRectRotated(Position.x , Position.y, 30, 10, 45)
+                surface.DrawTexturedRectRotated(Position.x , Position.y, 30, 10, -45)
+
+                end
+            end
+
             for k,v in pairs ( team.GetPlayers(2) ) do
                 local Position = ( v:GetPos() + Vector( 0,0,50 ) ):ToScreen()
                 if (v:Alive() && v:Team() != 0) then
                 Speed = ply:GetVelocity():Length()
                 local a = 200 + math.sin( CurTime()*1 ) * 50 - Speed
                 surface.SetDrawColor( 120,60,255, a )
-                draw.Circle( Position.x,Position.y, (a/40)+5, 100 )
+                surface.DrawTexturedRectRotated(Position.x , Position.y, 30, 10, 45)
+                surface.DrawTexturedRectRotated(Position.x , Position.y, 30, 10, -45)
 
                 end
             end
@@ -38,7 +58,8 @@
                 Speed = ply:GetVelocity():Length()
                 local a = 200 + math.sin( CurTime()*1 ) * 50 - Speed
                 surface.SetDrawColor( 240,160,20, a )
-                draw.Circle( Position.x,Position.y, (a/40)+5, 100 )
+                surface.DrawTexturedRectRotated(Position.x , Position.y, 30, 10, 45)
+                surface.DrawTexturedRectRotated(Position.x , Position.y, 30, 10, -45)
 
             end
             

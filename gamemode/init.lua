@@ -16,6 +16,7 @@ include("shared.lua")
 
 -- Init Round State
 
+roundStarted = false
 roundActive = false
 furrySpawn = false
 
@@ -31,22 +32,19 @@ function GM:PlayerSpawn(ply)
 
     if(roundActive == false) then
         ply:SetupHands()
-        ply:UnSpectate()
         ply:initTeam( 0 )
 
-        timer.Simple(1, function() roundStart() return end)
+        roundStart()
 
     else
         if(furrySpawn == true) then 
             ply:StripWeapons()
-            ply:UnSpectate()
             ply:SetupHands()
             ply:initTeam( 1 )
             ply:GiveWeps()
             return 
         else
             ply:StripWeapons()
-            ply:UnSpectate()
             ply:SetupHands()
             ply:initTeam( autoBalance( ply ) )
             ply:GiveWeps()
@@ -61,32 +59,51 @@ end
 function GM:PlayerDeath( ply )
 
     ply:SetHealth(0)
- 
-    timer.Create("infecteddelay", 3, 1, function() 
 
-        if(furrySpawn == false) then
-            return false
-        else
-            ply:Spawn()
-        end   
+    -- Set Delay --
+    ply.infecteddelay = CurTime() + 3
+    ply.check = CurTime() + 3
 
-    end)
+    -- Death Sounds --
 
-    timer.Create("delay", 1, 1, function() roundCheck() end)
+    if(ply:Team() == 1) then
+        ply:EmitSound("npc/strider/striderx_die1.wav")
+    end
+
 end 
 
 function GM:PlayerDeathSound()
     return true
 end
 
-function GM:PlayerDisconnected(ply)
-    timer.Create("delay", 1, 1, function() roundCheck() end)
+
+local timerDelay = 0
+function GM:Think()
+
+    roundCheck()
+    
+    if CurTime() > timerDelay then 
+        net.Start("timertick", false)
+        net.Broadcast()
+        timerDelay = CurTime() + 1
+    else   
+        return      
+    end
+    
+    
+    
 end
 
--- On Player Death
 function GM:PlayerDeathThink( ply )
+
+    -- Respawn Delay
+    if roundActive == true and CurTime() > ply.infecteddelay then     
+        ply:Spawn()    
+    end
+
     return false
-end
+    
+end 
 
 function GM:CanPlayerSuicide( ply )
 
@@ -103,6 +120,8 @@ end
 -- Console Commands
 
 util.AddNetworkString( "center_text" )
+util.AddNetworkString( "timertick" )
+util.AddNetworkString( "starttimer" )
 
 -- 
 util.AddNetworkString( "last" )
@@ -138,6 +157,14 @@ end )
 concommand.Add( "yz_ss", function( ply, cmd, args, str )
     net.Start( "stopall", false )
     net.Broadcast()
+end )
+
+-- Spawns
+concommand.Add( "yz_spawn_debug", function( ply, cmd, args, str )
+    local spawns = ents.FindByClass( "info_player_start" )
+    for k, sp in pairs(spawns) do
+        print(sp)
+    end
 end )
 
 

@@ -1,5 +1,7 @@
 
--- Hide Normal HUD
+--[[--------------------------
+Hide Normal HUD
+--]]--------------------------
 local hide = {
 	["CHudHealth"] = true,
 	["CHudBattery"] = true,
@@ -7,6 +9,10 @@ local hide = {
 	["CHudSecondaryAmmo"] = true,
 	["CHudCrosshair"] = true
 }
+
+--[[--------------------------
+Make Fonts
+--]]--------------------------
 
 surface.CreateFont( "TEAM", {
 	font = "Arial", -- Use the font-name which is shown to you by your operating system Font Viewer, not the file name
@@ -68,6 +74,10 @@ hook.Add( "HUDShouldDraw", "HideHUD", function( name )
 	-- Don't return anything here, it may break other addons that rely on this hook.
 end )
 
+--[[--------------------------
+Health and Ammo
+--]]--------------------------
+
 hook.Add("HUDPaint", "hud", function()
 
     local ply = LocalPlayer()
@@ -124,7 +134,10 @@ hook.Add("HUDPaint", "hud", function()
      
 end)
 
--- Color
+
+--[[--------------------------
+Color FIlters
+--]]--------------------------
 
 local norm = {
 	[ "$pp_colour_addr" ] = 0,

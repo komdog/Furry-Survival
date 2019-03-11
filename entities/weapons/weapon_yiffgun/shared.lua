@@ -74,20 +74,33 @@ function SWEP:PrimaryAttack()
 	local ent = tr.Entity
 
 	
-	if(IsValid( ent ) and ent:IsPlayer()) then
+	if (IsValid( ent ))  then
 
-		if(ent:Team() == 1) then return false end
+		if(ent:IsPlayer()) then
 
-		self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
-		ply:SetAnimation(PLAYER_ATTACK1)
-		ply:EmitSound("player/death.wav")
-		ent:SetHealth( ent:Health() - 100 ) 
-		if(ent:Health() <= 0) then
-			ent:Kill()
+			if(ent:Team() == 1) then return false end
+			self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
+			ply:SetAnimation(PLAYER_ATTACK1)
+			ply:EmitSound("npc/strider/strider_step1.wav")
+			ent:SetHealth( ent:Health() - 100 ) 
+			if(ent:Health() <= 0) then
+				ent:Kill()
+			end
+
+		elseif(isentity( ent )) then
+
+			ply:EmitSound("npc/strider/strider_step1.wav")
+			if(SERVER) then
+				ent:TakeDamage( 50000 )
+				print(ent)
+			end
+
+
 		end
+		
 	elseif(!IsValid( ent )) then
 
-		ply:EmitSound("player/death.wav")
+		ply:EmitSound("npc/strider/striderx_pain7.wav")
 		ply:SetAnimation(PLAYER_ATTACK1)
 
 	end
@@ -103,17 +116,20 @@ end
 function SWEP:SecondaryAttack()
 
 	local ply = self:GetOwner()
+	local rSpeed = ply:GetWalkSpeed()
+	local rSpeed = ply:GetRunSpeed()
 
-	local multi = 1
+	ply:EmitSound("npc/strider/striderx_alert5.wav")
+	
+	ply.boost = CurTime() + 3
 
-	if( ply:OnGround() ) then
+	print(ply.boost)
 
-	self.Owner:SetVelocity( ply:GetAimVector() * 1000 )
-	ply:EmitSound("npc/stalker/go_alert2.wav", 75, 90, 0.7, CHAN_SWEP )
+	ply:SetWalkSpeed(350)
+	ply:SetRunSpeed(350)
 
-	end
 
-	self:SetNextSecondaryFire( CurTime() + 3)
+	self:SetNextSecondaryFire( CurTime() + 5)
 
 end
 

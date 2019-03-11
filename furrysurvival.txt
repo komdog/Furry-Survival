@@ -1,7 +1,7 @@
 "Gamemode"
 {
     "base"          "base"
-    "title"         "Furry Survival"
+    "title"         "furrysurvival"
     "maps"          "^yz_"
     "menusystem"    "1"
     "worhshopid"    ""
