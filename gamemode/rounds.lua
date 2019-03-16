@@ -179,6 +179,9 @@ function roundEnd(winners)
         -- Cleanup
         game.CleanUpMap( false, {} )
 
+        -- Reset Kills
+        resetKills()
+
         -- Spawn Players
         for k, ply in pairs(player.GetAll()) do
             ply:SetupHands()

@@ -4,6 +4,7 @@ AddCSLuaFile("cl_roundhud.lua")
 AddCSLuaFile("cl_furrytracker.lua")
 AddCSLuaFile("cl_sounds.lua")
 AddCSLuaFile("sv_player.lua")
+AddCSLuaFile("sh_tags.lua")
 AddCSLuaFile("sh_scoreboard.lua")
 AddCSLuaFile("sh_upgrade.lua")
 AddCSLuaFile("rounds.lua")
@@ -13,6 +14,7 @@ include("sv_player.lua")
 include("rounds.lua")
 include("shared.lua")
 include("sh_upgrade.lua")
+include("sh_tags.lua")
 
 
 
@@ -55,8 +57,8 @@ end
 
 -- On Death
 function GM:PlayerDeath( ply, inflictor, attacker )
-    -- Player Code
 
+    -- Player Code
     ply:SetHealth(0)
 
     -- Set Delay --
@@ -64,13 +66,17 @@ function GM:PlayerDeath( ply, inflictor, attacker )
     ply.check = CurTime() + 3
 
     -- Death Sounds --
-
     if(ply:Team() == 1) then
         ply:EmitSound("npc/strider/striderx_die1.wav")
     end
 
-    -- Add Kill
-    attacker:SetNWInt("kills", attacker:GetNWInt("kills") + 1)
+    -- Add Attacker Kill
+    attacker.kills = attacker.kills + 1
+
+    -- Reset Player Kill --
+    ply.kills = 0 
+
+    -- Check for Upgrade
     upGrade()
 
 end 
@@ -158,6 +164,12 @@ end )
 concommand.Add( "yz_ss", function( ply, cmd, args, str )
     net.Start( "stopall", false )
     net.Broadcast()
+end )
+
+-- Stopsound
+concommand.Add( "yz_team", function( ply, cmd, args, str )
+    ply:Spawn()
+    ply:initTeam(args[1])
 end )
 
 -- Spawns

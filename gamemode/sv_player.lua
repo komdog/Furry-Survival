@@ -1,5 +1,4 @@
 local ply = FindMetaTable("Player")
-
 local teams = {}
 
 teams[0] = {
@@ -62,15 +61,24 @@ function ply:initTeam(t)
     self:SetTeam(t)
     self:StripWeapons()
 
-    -- Get Team Stuff
+    -- Get Team Stuffr
     self:SetPlayerColor(teams[t].color)
     
 
     -- Set HP
     if(self:Team() == 1) then
+
+        local furrycount = table.Count(team.GetPlayers(1))
+
+        if(furrycount <= 1) then
+            healthDiv = 1
+        else
+            healthDiv = furrycount/2
+        end
+
         self:SetModel(teams[t].class.furry.model[1])
-        self:SetHealth(teams[t].class.furry.health.hp/(table.Count(team.GetPlayers(1))/4)
-        self:SetMaxHealth(teams[t].class.furry.health.maxhp/(table.Count(team.GetPlayers(1))/4)
+        self:SetHealth(teams[t].class.furry.health.hp/healthDiv)
+        self:SetMaxHealth(teams[t].class.furry.health.maxhp/healthDiv)
         self:SetRunSpeed(teams[t].class.furry.move.run)
         self:SetWalkSpeed(teams[t].class.furry.move.walk)
         self:SetJumpPower(teams[t].class.furry.move.jump)
@@ -89,7 +97,6 @@ function ply:initTeam(t)
         end
 
     end
-    
     
     return true
 end
@@ -110,9 +117,16 @@ function GM:GetFallDamage( ply, speed )
         return ( speed / 20 ) 
 
     end
-
-
     
+end
+
+-- Flash Light
+function GM:PlayerSwitchFlashlight( ply, enabled )
+    if(ply:Team() == 1) then
+        return false
+    else
+        return true
+    end
 end
 
 -- No TK
@@ -194,7 +208,7 @@ function GM:PlayerSay(sender, text, teamChat)
         return text
     end
 
-
+    return false
 
 end
 

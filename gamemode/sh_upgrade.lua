@@ -3,28 +3,29 @@ if( SERVER ) then
 
     function resetKills()
         for k, ply in pairs( player.GetAll() ) do
-            ply:SetNWInt( 'kills', 0 )
+            ply.kills = 0
         end
     end
 
     function upGrade()
         for k, ply in pairs( player.GetAll() ) do
+            ply:SetNWInt("kills", ply.kills)
             if(ply:Team() == 1) then return false end
-            if(ply:GetNWInt('kills') == 5 ) then
+            if(ply.kills == 5 ) then
 
                 if (ply:HasWeapon("weapon_smg1")) then return end
                 ply:Give("weapon_smg1") 
                 ply:GiveAmmo(200, "SMG1")
                 ply:EmitSound("player/wep_upgrade.wav")
                 
-            elseif(ply:GetNWInt('kills') == 10 ) then
+            elseif(ply.kills == 10 ) then
 
                 if (ply:HasWeapon("weapon_ar2")) then return end
                 ply:Give("weapon_ar2")
                 ply:GiveAmmo(200, "AR2")
                 ply:EmitSound("player/wep_upgrade.wav")
 
-            elseif(ply:GetNWInt('kills') == 15 ) then
+            elseif(ply.kills == 15 ) then
 
                 if (ply:HasWeapon("yz_m3")) then return end
                 ply:Give("yz_m3")
@@ -38,7 +39,7 @@ if( SERVER ) then
 
     function printKills()
         for k, ply in ipairs( player.GetAll() ) do
-            local int = ply:GetNWInt('kills')
+            local int = ply.kills
             print(ply:Nick() .. " - Kills: " .. int)
         end
     end

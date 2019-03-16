@@ -35,41 +35,25 @@ function SWEP:Initialize()
 
 end
 
+
 --[[---------------------------------------------------------
 	Name: SWEP:PrimaryAttack()
 	Desc: +attack1 has been pressed
 -----------------------------------------------------------]]
 function SWEP:PrimaryAttack()
 
-
 	local ply = self:GetOwner()
 
-
-	-- Get Shoot Vectors
-	local shootpos = ply:GetShootPos()
-	local endshootpos = shootpos + ply:GetAimVector() * 200
-
-	-- Hit Box
-	local tmin = Vector(1,1,1) * 55
-	local tmax = Vector(1,1,1) * -55
-
-	local tr = util.TraceHull({
-		start = shootpos,
-		endpos = endshootpos,
+	local tr = util.TraceHull( {
+		start = ply:GetShootPos(),
+		endpos = ply:GetShootPos() + ( ply:GetAimVector() * 100 ),
 		filter = ply,
-		mask = MASK_SHOT_HULL,
-		mins = tmin,
-		maxs = tmax
+		mins = Vector( -5, -5, -5 ),
+		maxs = Vector( 5, 5, 5 ),
+		mask = MASK_SHOT_HULL
 	})
 
-	if(!IsValid( tr.Entity )) then
-		tr = util.TraceLine({
-			start = shootpos,
-			endpos = endshootpos,
-			filter = ply,
-			mask = MASK_SHOT_HULL
-		})
-	end
+	if(!IsValid( tr.Entity )) then return end
 
 	local ent = tr.Entity
 
@@ -88,10 +72,9 @@ function SWEP:PrimaryAttack()
 		if(ent:IsPlayer()) then
 
 			if(ent:Team() == 1) then return false end
-			self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
-			ply:SetAnimation(PLAYER_ATTACK1)
+			
 			if(SERVER) then
-				ent:TakeDamage( 68 )
+				ent:TakeDamage( math.random(50, 70) )
 				ply:EmitSound(wepSound[math.random(1, 5)])
 			end
 			if(ent:Health() <= 0) then
@@ -108,8 +91,6 @@ function SWEP:PrimaryAttack()
 					obj:SetVelocity( ply:GetAimVector()*1500 )
 				end
 			end
-
-
 		end
 		
 	elseif(!IsValid( ent )) then
