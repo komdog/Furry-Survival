@@ -47,11 +47,11 @@ function SWEP:PrimaryAttack()
 
 	-- Get Shoot Vectors
 	local shootpos = ply:GetShootPos()
-	local endshootpos = shootpos + ply:GetAimVector() * 100
+	local endshootpos = shootpos + ply:GetAimVector() * 200
 
 	-- Hit Box
-	local tmin = Vector(1,1,1) * -15
-	local tmax = Vector(1,1,1) * 15
+	local tmin = Vector(1,1,1) * 55
+	local tmax = Vector(1,1,1) * -55
 
 	local tr = util.TraceHull({
 		start = shootpos,
@@ -73,7 +73,16 @@ function SWEP:PrimaryAttack()
 
 	local ent = tr.Entity
 
-	
+	local wepSound = {
+		"furry/default/moan_01.wav",
+		"furry/default/moan_02.wav",
+		"furry/default/moan_03.wav",
+		"furry/default/moan_04.wav",
+		"furry/default/moan_05.wav"
+	}
+
+	ply:ViewPunch( Angle( -10, 0, 0 ) )
+
 	if (IsValid( ent ))  then
 
 		if(ent:IsPlayer()) then
@@ -81,18 +90,23 @@ function SWEP:PrimaryAttack()
 			if(ent:Team() == 1) then return false end
 			self.Weapon:SendWeaponAnim( ACT_VM_HITCENTER )
 			ply:SetAnimation(PLAYER_ATTACK1)
-			ply:EmitSound("npc/strider/strider_step1.wav")
-			ent:SetHealth( ent:Health() - 100 ) 
+			if(SERVER) then
+				ent:TakeDamage( 68 )
+				ply:EmitSound(wepSound[math.random(1, 5)])
+			end
 			if(ent:Health() <= 0) then
-				ent:Kill()
+				ply:AddFrags(1)
 			end
 
 		elseif(isentity( ent )) then
 
-			ply:EmitSound("npc/strider/strider_step1.wav")
+	
 			if(SERVER) then
-				ent:TakeDamage( 50000 )
-				print(ent)
+				ent:TakeDamage( 10000 )
+				obj = ent:GetPhysicsObject()
+				if(obj:IsValid()) then
+					obj:SetVelocity( ply:GetAimVector()*1500 )
+				end
 			end
 
 
@@ -100,12 +114,14 @@ function SWEP:PrimaryAttack()
 		
 	elseif(!IsValid( ent )) then
 
-		ply:EmitSound("npc/strider/striderx_pain7.wav")
+		if(SERVER) then
+			ply:EmitSound(wepSound[math.random(1, 5)])
+		end
 		ply:SetAnimation(PLAYER_ATTACK1)
 
 	end
 
-	self:SetNextPrimaryFire( CurTime() + 1)
+	self:SetNextPrimaryFire( CurTime() + 2)
 
 end
 
@@ -120,16 +136,15 @@ function SWEP:SecondaryAttack()
 	local rSpeed = ply:GetRunSpeed()
 
 	ply:EmitSound("npc/strider/striderx_alert5.wav")
-	
-	ply.boost = CurTime() + 3
 
-	print(ply.boost)
+	ply:SetRenderMode( RENDERMODE_TRANSALPHA )
+	ply:SetColor(Color(0, 0, 0, 0))
 
-	ply:SetWalkSpeed(350)
-	ply:SetRunSpeed(350)
+	timer.Simple(3, function()
+		ply:SetColor(Color(255, 255, 255, 255))
+	end)
 
-
-	self:SetNextSecondaryFire( CurTime() + 5)
+	self:SetNextSecondaryFire( CurTime() + 15)
 
 end
 

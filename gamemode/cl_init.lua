@@ -1,5 +1,6 @@
 include("shared.lua")
 include("sh_scoreboard.lua")
+include("sh_upgrade.lua")
 include("cl_hud.lua")
 include("cl_roundhud.lua")
 include("cl_furrytracker.lua")

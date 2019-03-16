@@ -5,20 +5,20 @@ AddCSLuaFile("cl_furrytracker.lua")
 AddCSLuaFile("cl_sounds.lua")
 AddCSLuaFile("sv_player.lua")
 AddCSLuaFile("sh_scoreboard.lua")
+AddCSLuaFile("sh_upgrade.lua")
 AddCSLuaFile("rounds.lua")
 AddCSLuaFile("shared.lua")
 
 include("sv_player.lua")
 include("rounds.lua")
 include("shared.lua")
+include("sh_upgrade.lua")
 
 
 
 -- Init Round State
-
-roundStarted = false
 roundActive = false
-furrySpawn = false
+
 
 function GM:PlayerConnect(name, ip)
     print(name .. "Has joined the game!")
@@ -41,13 +41,11 @@ function GM:PlayerSpawn(ply)
             ply:StripWeapons()
             ply:SetupHands()
             ply:initTeam( 1 )
-            ply:GiveWeps()
             return 
         else
             ply:StripWeapons()
             ply:SetupHands()
             ply:initTeam( autoBalance( ply ) )
-            ply:GiveWeps()
             return 
         end
     end
@@ -56,7 +54,8 @@ function GM:PlayerSpawn(ply)
 end
 
 -- On Death
-function GM:PlayerDeath( ply )
+function GM:PlayerDeath( ply, inflictor, attacker )
+    -- Player Code
 
     ply:SetHealth(0)
 
@@ -70,7 +69,15 @@ function GM:PlayerDeath( ply )
         ply:EmitSound("npc/strider/striderx_die1.wav")
     end
 
+    -- Add Kill
+    attacker:SetNWInt("kills", attacker:GetNWInt("kills") + 1)
+    upGrade()
+
 end 
+
+function GM:PlayerDisconnected(ply)
+    if(table.Count(team.GetPlayers(1)) < 1) then roundEnd("Normies") end
+end
 
 function GM:PlayerDeathSound()
     return true
@@ -106,13 +113,7 @@ function GM:PlayerDeathThink( ply )
 end 
 
 function GM:CanPlayerSuicide( ply )
-
-    if(ply:Team() == 0)then 
-        return false 
-    else
-        return true 
-    end
-
+    return ply:IsSuperAdmin() 
 end
 
 

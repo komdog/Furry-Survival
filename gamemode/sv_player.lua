@@ -13,20 +13,33 @@ teams[0] = {
 
 teams[1] = {
     name = "Furries", 
-    color = Vector(1, 0, 0), 
-    health = {hp = 200,maxhp = 200 },
-    weapons = {'weapon_yiffgun'},
-    model = {'models/player/mikier/renamon.mdl'},
-    move = { walk = 300, run = 300, jump = 300}
+    color = Vector(1, 1, 1), 
+    class = {
+        furry = {
+            health = {hp = 200, maxhp = 200 },
+            weapons = {'weapon_yiffgun'},
+            model = {'models/player/mikier/renamon.mdl'},
+            move = { walk = 260, run = 260, jump = 300}
+        },
+        yiffer = {
+            health = {hp = 200, maxhp = 200 },
+            weapons = {'weapon_yiffgun'},
+            model = {'models/player/mikier/renamon.mdl'},
+            move = { walk = 260, run = 260, jump = 300}
+        }
+    }
+
 }
 
 teams[2] = {
     name = "Normies", 
     color = Vector(0.8, 0.4, 1), 
     health = {hp = 100,maxhp = 100},
-    weapons = {"weapon_crowbar"},
+    weapons = {
+            "yz_fiveseven",
+        },
     model = {"models/player/Group02/male_06.mdl"},
-    move = { walk = 200, run = 200, jump = 200}
+    move = { walk = 250, run = 250, jump = 200}
 }
 
 teams[3] = {
@@ -34,11 +47,11 @@ teams[3] = {
     color = Vector(0, 1, 0), 
     health = {hp = 150,maxhp = 150},
     weapons = {
-        'weapon_smg1',
+        'yz_fiveseven',
         'weapon_stunstick'
     },
     model = {"models/player/combine_soldier_prisonguard.mdl"},
-    move = { walk = 180, run = 180, jump = 200}
+    move = { walk = 240, run = 240, jump = 200}
 }
 
 function ply:initTeam(t)
@@ -47,39 +60,38 @@ function ply:initTeam(t)
     --if not teams[t] then return end
 
     self:SetTeam(t)
+    self:StripWeapons()
 
     -- Get Team Stuff
     self:SetPlayerColor(teams[t].color)
-    self:SetModel(teams[t].model[1])
+    
 
     -- Set HP
     if(self:Team() == 1) then
-        self:SetHealth(teams[t].health.hp/table.Count(team.GetPlayers(1)))
-        self:SetMaxHealth(teams[t].health.maxhp/table.Count(team.GetPlayers(1)))
+        self:SetModel(teams[t].class.furry.model[1])
+        self:SetHealth(teams[t].class.furry.health.hp/(table.Count(team.GetPlayers(1))/4)
+        self:SetMaxHealth(teams[t].class.furry.health.maxhp/(table.Count(team.GetPlayers(1))/4)
+        self:SetRunSpeed(teams[t].class.furry.move.run)
+        self:SetWalkSpeed(teams[t].class.furry.move.walk)
+        self:SetJumpPower(teams[t].class.furry.move.jump)
+        self:Give(teams[t].class.furry.weapons[1])
     else
+        self:SetModel(teams[t].model[1])
         self:SetHealth(teams[t].health.hp)
         self:SetMaxHealth(teams[t].health.maxhp)
+        self:SetRunSpeed(teams[t].move.run)
+        self:SetWalkSpeed(teams[t].move.walk)
+        self:SetJumpPower(teams[t].move.jump)
+
+        for k, wep in pairs(teams[t].weapons) do
+            self:Give(wep)
+            self:SetAmmo(250, "Pistol")
+        end
+
     end
     
-    --Movement
-    self:SetRunSpeed(teams[t].move.run)
-    self:SetWalkSpeed(teams[t].move.walk)
-    self:SetJumpPower(teams[t].move.jump)
-
+    
     return true
-end
-
--- Give Weapons
-function ply:GiveWeps()
-
-    local t = self:Team()
-    self:StripWeapons()
-
-    for k, v in pairs(teams[t].weapons) do
-        self:Give(v)
-        self:SetAmmo(135, "SMG1")
-    end
-
 end
 
 
@@ -101,26 +113,6 @@ function GM:GetFallDamage( ply, speed )
 
 
     
-end
-
--- Speed On Damage
-function GM:EntityTakeDamage( ply, dmginfo )
-
-    if ( ply:IsPlayer()) then
-    
-        if(ply:Team() == 1) then
-            ply:SetRunSpeed(teams[1].move.run/2)
-            ply:SetWalkSpeed(teams[1].move.walk/2)
-
-            timer.Simple(1, function()
-                --Movement
-                ply:SetRunSpeed(teams[1].move.run)
-                ply:SetWalkSpeed(teams[1].move.walk)
-            end)
-        end
-
-	end
-
 end
 
 -- No TK

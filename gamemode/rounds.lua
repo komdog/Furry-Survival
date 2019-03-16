@@ -35,6 +35,8 @@ function roundStart()
 
         if(roundStarted == false) then return end
 
+        resetKills()
+
 
         chosen = table.Random( player.GetAll() ) 
         print(chosen)
@@ -137,16 +139,6 @@ function roundCheck()
         net.Start( "last", false )
         net.Send(player.GetAll())
 
-        for k ,v in pairs(player.GetAll()) do
-            if(v:Team() == 2 or v:Team() == 3) then
-                if(v:Alive()) then
-                    v:Give('weapon_ar2')
-                    v:SetAmmo(1500, "AR2")
-                end
-            end
-        end
-
-
         -- Text w/ Net Delay
 
         net.Start( "center_text", false )
@@ -212,11 +204,7 @@ function autoBalance( ply )
     if(chosen == ply) then
         return 1
     else
-        if(ac/2 > normies) then
-            return 2
-        else
-            return 3
-        end
+            return math.random(2, 3)
     end
   
 

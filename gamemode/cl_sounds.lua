@@ -1,6 +1,6 @@
 
 net.Receive("last", function()
-    sound.PlayURL ( "https://komdog.club/api/gmod/audio/doom.wav", "2d", function( station )
+    sound.PlayURL ( "https://komdog.club/api/gmod/audio/bfg.wav", "2d", function( station )
         if ( IsValid( station ) ) then
             station:SetPos( LocalPlayer():GetPos() )
             station:Play()

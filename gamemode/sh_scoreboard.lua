@@ -31,7 +31,7 @@ if CLIENT then
 
 	local 	Columns = {}
 			Columns[1] = {name="Name", command=function(self, arg) return tostring(arg:Name()) end}
-			Columns[2] = {name="Team", command=function(self, arg) return tostring(arg:Team()) end}
+			Columns[2] = {name="Kills", command=function(self, arg) return tostring(arg:Frags()) end}
 			Columns[3] = {name="Ping", command=function(self, arg) return tostring(arg:Ping()) end}
 
 	surface.CreateFont("ScoreboardTitleFont", {
