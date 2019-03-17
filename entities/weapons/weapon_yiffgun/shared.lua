@@ -48,10 +48,10 @@ function SWEP:PrimaryAttack()
 
 	local tr = util.TraceHull( {
 		start = ply:GetShootPos(),
-		endpos = ply:GetShootPos() + ( ply:GetAimVector() * 100 ),
+		endpos = ply:GetShootPos() + ( ply:GetAimVector() * 90 ),
 		filter = ply,
-		mins = Vector( -5, -5, -5 ),
-		maxs = Vector( 5, 5, 5 ),
+		mins = Vector( -4, -4, -4 ),
+		maxs = Vector( 4, 4, 4 ),
 		mask = MASK_SHOT_HULL
 	})
 
@@ -84,8 +84,7 @@ function SWEP:PrimaryAttack()
 		if(tr.Entity:IsPlayer()) then ply:EmitSound("ambient/machines/thumper_hit.wav") end
 
 		tr.Entity:TakeDamageInfo( dmginfo )
-		hit = true
-
+		hit = truew
 	end
 
 	if ( SERVER && IsValid( tr.Entity ) ) then
@@ -93,6 +92,7 @@ function SWEP:PrimaryAttack()
 		if ( IsValid( phys ) ) then
 			phys:ApplyForceOffset( self.Owner:GetAimVector() * 50000 * phys:GetMass(), tr.HitPos )
 			ply:EmitSound("npc/vort/foot_hit.wav")
+			
 		end
 	end
 
@@ -119,7 +119,7 @@ function SWEP:SecondaryAttack()
 	
 	local t = {}
 	t.start = ply:GetPos() + Vector( 0, 0, 32 ) -- Move them up a bit so they can travel across the ground
-	t.endpos = ply:GetPos() + ply:EyeAngles():Forward() * 800
+	t.endpos = ply:GetPos() + ply:EyeAngles():Forward() * 300
 	t.filter = ply
 
 	local tr = util.TraceEntity( t, ply )
@@ -135,7 +135,8 @@ function SWEP:SecondaryAttack()
 	end
 
 
-	self:SetNextSecondaryFire( CurTime() + 10)
+
+	self:SetNextSecondaryFire( CurTime() + 5)
 
 end
 

@@ -1,4 +1,4 @@
-if CLIENT then
+if (CLIENT) then
     local Scoreboard_Roundness = 0
 	local Scoreboard_Color = Color(20, 20, 20, 220)
 	local Scoreboard_XGap = 6

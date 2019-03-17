@@ -27,9 +27,7 @@ function roundStart()
 
 
     -- Start Game After 1 Second
-    
 
-    -- Start Game After 1 Second
     
     function setupGame()
 
@@ -51,7 +49,11 @@ function roundStart()
         net.Broadcast()
 
         -- Timer Tick
+    
+        roundTime = 300
+
         net.Start( "starttimer", false )
+            net.WriteInt(roundTime, 10)
         net.Broadcast()
 
         -- Set Active Round State
@@ -68,7 +70,7 @@ function roundStart()
         furrySpawn = true
 
         -- Round Timer
-        roundTimer = CurTime() + 300
+        roundTimer = CurTime() + roundTime
 
     end
 

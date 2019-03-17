@@ -83,7 +83,7 @@ hook.Add("HUDPaint", "hud", function()
     local ply = LocalPlayer()
 
     local hp = ply:Health()
-    local maxHp = ply:GetMaxHealth()
+	local maxHp = ply:GetMaxHealth()
 
 	surface.SetAlphaMultiplier(1)
 	

@@ -7,6 +7,7 @@ AddCSLuaFile("sv_player.lua")
 AddCSLuaFile("sh_tags.lua")
 AddCSLuaFile("sh_scoreboard.lua")
 AddCSLuaFile("sh_upgrade.lua")
+AddCSLuaFile("sh_killicon.lua")
 AddCSLuaFile("rounds.lua")
 AddCSLuaFile("shared.lua")
 
@@ -14,13 +15,14 @@ include("sv_player.lua")
 include("rounds.lua")
 include("shared.lua")
 include("sh_upgrade.lua")
+include("sh_killicon.lua")
 include("sh_tags.lua")
 
 
 
 -- Init Round State
 roundActive = false
-
+round = 1
 
 function GM:PlayerConnect(name, ip)
     print(name .. "Has joined the game!")
@@ -71,18 +73,18 @@ function GM:PlayerDeath( ply, inflictor, attacker )
     end
 
     -- Add Attacker Kill
-    attacker.kills = attacker.kills + 1
+    upGrade(attacker)
 
     -- Reset Player Kill --
     ply.kills = 0 
 
     -- Check for Upgrade
-    upGrade()
+    
 
 end 
 
 function GM:PlayerDisconnected(ply)
-    if(table.Count(team.GetPlayers(1)) < 1) then roundEnd("Normies") end
+
 end
 
 function GM:PlayerDeathSound()
@@ -166,10 +168,15 @@ concommand.Add( "yz_ss", function( ply, cmd, args, str )
     net.Broadcast()
 end )
 
--- Stopsound
+-- Team
 concommand.Add( "yz_team", function( ply, cmd, args, str )
     ply:Spawn()
     ply:initTeam(args[1])
+end )
+
+-- Stats
+concommand.Add( "yz_stats", function( ply, cmd, args, str )
+    printKills()
 end )
 
 -- Spawns

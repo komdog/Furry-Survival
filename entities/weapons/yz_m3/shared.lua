@@ -11,7 +11,7 @@ SWEP.Slot					= 3			-- Slot in the weapon selection menu
 SWEP.SlotPos				= 1	-- Position in the slot
 SWEP.DrawAmmo				= true		-- Should draw the default HL2 ammo counter
 SWEP.DrawWeaponInfoBox		= false		-- Should draw the weapon info box
-SWEP.BounceWeaponIcon   	= 	false	-- Should the weapon icon bounce?
+SWEP.BounceWeaponIcon   	= false	-- Should the weapon icon bounce?
 SWEP.DrawCrosshair			= true		-- set false if you want no crosshair
 SWEP.Weight					= 30			-- rank relative to other weapons. bigger is better
 SWEP.AutoSwitchTo			= true		-- Auto switch to if we pick it up
@@ -43,7 +43,7 @@ SWEP.ShellTime				= .3
 
 SWEP.Primary.NumShots		= 9		-- How many bullets to shoot per trigger pull, AKA pellets
 SWEP.Primary.Damage			= 10	-- Base damage per bullet
-SWEP.Primary.Spread			= .035	-- Define from-the-hip accuracy 1 is terrible, .0001 is exact)
+SWEP.Primary.Spread			= .15	-- Define from-the-hip accuracy 1 is terrible, .0001 is exact)
 SWEP.Primary.IronAccuracy 	= .035	-- Ironsight accuracy, should be the same for shotguns
 -- Because irons don't magically give you less pellet spread!
 

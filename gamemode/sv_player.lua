@@ -1,6 +1,11 @@
 local ply = FindMetaTable("Player")
 local teams = {}
 
+pistols = {
+    'yz_glock',
+    'yz_fiveseven'
+}
+
 teams[0] = {
     name = "Waiting", 
     color = Vector(0.5, 0.5, 0.5), 
@@ -35,7 +40,7 @@ teams[2] = {
     color = Vector(0.8, 0.4, 1), 
     health = {hp = 100,maxhp = 100},
     weapons = {
-            "yz_fiveseven",
+            pistols[math.random(1, 2)],
         },
     model = {"models/player/Group02/male_06.mdl"},
     move = { walk = 250, run = 250, jump = 200}
@@ -46,8 +51,8 @@ teams[3] = {
     color = Vector(0, 1, 0), 
     health = {hp = 150,maxhp = 150},
     weapons = {
-        'yz_fiveseven',
-        'weapon_stunstick'
+        'weapon_stunstick',
+        pistols[math.random(1, 2)]
     },
     model = {"models/player/combine_soldier_prisonguard.mdl"},
     move = { walk = 240, run = 240, jump = 200}
@@ -134,15 +139,12 @@ function GM:PlayerShouldTakeDamage( victim, killer )
 
     if (!killer:IsPlayer()) then return true end
     
-    if victim:Team() == killer:Team() then
-        return false
-    elseif(killer:Team() == 2 and victim:Team() == 3) then
-        return false
-    elseif(killer:Team() == 3 and victim:Team() == 2) then
-        return false
-    else
-        return true
-    end
+    if victim:Team() == killer:Team() then return false end
+    if(killer:Team() == 2 and victim:Team() == 3) then return false end
+    if(killer:Team() == 3 and victim:Team() == 2) then return false end
+
+    return true
+
 
 end
 

@@ -1,9 +1,10 @@
 
 net.Receive("last", function()
-    sound.PlayURL ( "https://komdog.club/api/gmod/audio/bfg.wav", "2d", function( station )
+    sound.PlayURL ( "https://komdog.club/api/gmod/audio/last.wav", "2d", function( station )
         if ( IsValid( station ) ) then
             station:SetPos( LocalPlayer():GetPos() )
             station:Play()
+            RunConsoleCommand( "act","muscle" )
         else
             LocalPlayer():ChatPrint( "Cannot Play Sound" )
         end

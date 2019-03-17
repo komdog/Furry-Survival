@@ -30,7 +30,7 @@ SWEP.UseHands 				= true
 SWEP.AdminSpawnable			= true
 SWEP.FiresUnderwater 		= false
 
-SWEP.Primary.Sound			= "weapons/2deagle/deagle-1.wavw"		-- Script that calls the primary fire sound
+SWEP.Primary.Sound			= "weapons/2deagle/deagle-1.wav"		-- Script that calls the primary fire sound
 SWEP.Primary.RPM			= 300			-- This is in Rounds Per Minute
 SWEP.Primary.ClipSize		= 7		-- Size of a clip
 SWEP.Primary.DefaultClip	= 28		-- Bullets you start with
@@ -46,7 +46,7 @@ SWEP.data 					= {}				--The starting firemode
 SWEP.data.ironsights		= 1
 
 SWEP.Primary.NumShots		= 1		-- How many bullets to shoot per trigger pull
-SWEP.Primary.Damage			= 25	-- Base damage per bullet
+SWEP.Primary.Damage			= 80	-- Base damage per bullet
 SWEP.Primary.Spread			= .03	-- Define from-the-hip accuracy 1 is terrible, .0001 is exact)
 SWEP.Primary.IronAccuracy 	= .02 -- Ironsight accuracy, should be the same for shotguns
 

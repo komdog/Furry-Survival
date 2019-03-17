@@ -28,6 +28,9 @@ function ChatPrefixes(ply, text, teamChat, isDead)
 
 end
 
+
+
 if( CLIENT ) then
-hook.Add("OnPlayerChat", "ChatPrefixes", ChatPrefixes)
+    hook.Add("OnPlayerChat", "ChatPrefixes", ChatPrefixes)
 end
+    
