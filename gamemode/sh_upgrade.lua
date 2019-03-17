@@ -9,12 +9,13 @@ if( SERVER ) then
 
     function upGrade()
         for k, ply in pairs( player.GetAll() ) do
+            if (ply:Team() == 1) then return end
             ply:SetNWInt("kills", ply.kills)
             if(ply:Team() == 1) then return false end
             if(ply.kills == 5 ) then
 
-                if (ply:HasWeapon("weapon_smg1")) then return end
-                ply:Give("weapon_smg1") 
+                if (ply:HasWeapon("yz_deagle")) then return end
+                ply:Give("yz_deagle") 
                 ply:GiveAmmo(200, "SMG1")
                 ply:EmitSound("player/wep_upgrade.wav")
                 
@@ -55,6 +56,8 @@ if( CLIENT ) then
     hook.Add("HUDPaint", "drawKills", function()
 
     local ply = LocalPlayer()
+    if (ply:Team() == 1) then return end
+
     local kills = ply:GetNWInt('kills')
 
     -- Draw Cross

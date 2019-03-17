@@ -44,6 +44,8 @@ function SWEP:PrimaryAttack()
 
 	local ply = self:GetOwner()
 
+	self.Owner:LagCompensation( true )
+
 	local tr = util.TraceHull( {
 		start = ply:GetShootPos(),
 		endpos = ply:GetShootPos() + ( ply:GetAimVector() * 100 ),
@@ -53,7 +55,9 @@ function SWEP:PrimaryAttack()
 		mask = MASK_SHOT_HULL
 	})
 
-	if(!IsValid( tr.Entity )) then return end
+	if(!IsValid( tr.Entity )) then  
+		
+	end
 
 	local ent = tr.Entity
 
@@ -65,42 +69,35 @@ function SWEP:PrimaryAttack()
 		"furry/default/moan_05.wav"
 	}
 
+	if( SERVER ) then ply:EmitSound(wepSound[math.random(1, 5)]) end
 	ply:ViewPunch( Angle( -10, 0, 0 ) )
-
-	if (IsValid( ent ))  then
-
-		if(ent:IsPlayer()) then
-
-			if(ent:Team() == 1) then return false end
-			
-			if(SERVER) then
-				ent:TakeDamage( math.random(50, 70) )
-				ply:EmitSound(wepSound[math.random(1, 5)])
-			end
-			if(ent:Health() <= 0) then
-				ply:AddFrags(1)
-			end
-
-		elseif(isentity( ent )) then
-
 	
-			if(SERVER) then
-				ent:TakeDamage( 10000 )
-				obj = ent:GetPhysicsObject()
-				if(obj:IsValid()) then
-					obj:SetVelocity( ply:GetAimVector()*1500 )
-				end
-			end
-		end
-		
-	elseif(!IsValid( ent )) then
+	if ( SERVER && IsValid( tr.Entity ) && ( tr.Entity:IsNPC() || tr.Entity:IsPlayer() || tr.Entity:Health() > 0 ) ) then
+		local dmginfo = DamageInfo()
 
-		if(SERVER) then
-			ply:EmitSound(wepSound[math.random(1, 5)])
-		end
-		ply:SetAnimation(PLAYER_ATTACK1)
+		local attacker = ply
+		if ( !IsValid( attacker ) ) then attacker = self end
+		dmginfo:SetAttacker( attacker )
+
+		dmginfo:SetInflictor( self )
+		dmginfo:SetDamage( math.random( 40, 80 ) )
+		if(tr.Entity:IsPlayer()) then ply:EmitSound("ambient/machines/thumper_hit.wav") end
+
+		tr.Entity:TakeDamageInfo( dmginfo )
+		hit = true
 
 	end
+
+	if ( SERVER && IsValid( tr.Entity ) ) then
+		local phys = tr.Entity:GetPhysicsObject()
+		if ( IsValid( phys ) ) then
+			phys:ApplyForceOffset( self.Owner:GetAimVector() * 50000 * phys:GetMass(), tr.HitPos )
+			ply:EmitSound("npc/vort/foot_hit.wav")
+		end
+	end
+
+
+	self.Owner:LagCompensation( false )
 
 	self:SetNextPrimaryFire( CurTime() + 2)
 
@@ -116,16 +113,29 @@ function SWEP:SecondaryAttack()
 	local rSpeed = ply:GetWalkSpeed()
 	local rSpeed = ply:GetRunSpeed()
 
-	ply:EmitSound("npc/strider/striderx_alert5.wav")
+	if( SERVER ) then
 
-	ply:SetRenderMode( RENDERMODE_TRANSALPHA )
-	ply:SetColor(Color(0, 0, 0, 0))
+	ply:EmitSound("furry/default/teleport.wav")
+	
+	local t = {}
+	t.start = ply:GetPos() + Vector( 0, 0, 32 ) -- Move them up a bit so they can travel across the ground
+	t.endpos = ply:GetPos() + ply:EyeAngles():Forward() * 800
+	t.filter = ply
 
-	timer.Simple(3, function()
-		ply:SetColor(Color(255, 255, 255, 255))
-	end)
+	local tr = util.TraceEntity( t, ply )
 
-	self:SetNextSecondaryFire( CurTime() + 15)
+	local pos = tr.HitPos
+
+	-- target_ply.ulx_prevpos = target_ply:GetPos()
+	-- target_ply.ulx_prevang = target_ply:EyeAngles()
+
+	ply:SetPos( pos )
+	ply:SetLocalVelocity( Vector( 0, 0, 0 ) ) -- Stop!
+
+	end
+
+
+	self:SetNextSecondaryFire( CurTime() + 10)
 
 end
 

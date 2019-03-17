@@ -143,7 +143,7 @@ end )
 
 -- End Round
 concommand.Add( "yz_end", function( ply, cmd, args )
-    roundEnd('nobody')
+    roundEnd('The Furry Spirit')
 	print( "Ended Round" )
 end )
 
