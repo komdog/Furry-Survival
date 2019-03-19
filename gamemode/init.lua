@@ -5,6 +5,7 @@ AddCSLuaFile("cl_furrytracker.lua")
 AddCSLuaFile("cl_sounds.lua")
 AddCSLuaFile("sv_player.lua")
 AddCSLuaFile("sh_tags.lua")
+AddCSLuaFile("sh_chat.lua")
 AddCSLuaFile("sh_scoreboard.lua")
 AddCSLuaFile("sh_upgrade.lua")
 AddCSLuaFile("sh_killicon.lua")
@@ -17,6 +18,7 @@ include("shared.lua")
 include("sh_upgrade.lua")
 include("sh_killicon.lua")
 include("sh_tags.lua")
+include("sh_chat.lua")
 
 
 
@@ -30,32 +32,23 @@ end
 
 function GM:PlayerInitialSpawn(ply)  
 
+    if(roundActive == true) then ply:initTeam( TEAM_FURRY ) end
+
 end
 
 function GM:PlayerSpawn(ply) 
 
-    if(roundActive == false) then
-        ply:SetupHands()
-        ply:initTeam( 0 )
 
-        roundStart()
-
+    if(respawnFurry == false) then
+        roundStart() 
+        ply:initTeam( TEAM_WAITING )
     else
-        if(furrySpawn == true) then 
-            ply:StripWeapons()
-            ply:SetupHands()
-            ply:initTeam( 1 )
-            return 
-        else
-            ply:StripWeapons()
-            ply:SetupHands()
-            ply:initTeam( autoBalance( ply ) )
-            return 
-        end
+        ply:initTeam( TEAM_FURRY )
     end
 
 
 end
+
 
 -- On Death
 function GM:PlayerDeath( ply, inflictor, attacker )
@@ -93,16 +86,16 @@ end
 
 
 local timerDelay = 0
+
 function GM:Think()
 
     roundCheck()
     
+    -- Tick Timer
     if CurTime() > timerDelay then 
         net.Start("timertick", false)
         net.Broadcast()
-        timerDelay = CurTime() + 1
-    else   
-        return      
+        timerDelay = CurTime() + 1 
     end
     
     
@@ -112,7 +105,14 @@ end
 function GM:PlayerDeathThink( ply )
 
     -- Respawn Delay
-    if roundActive == true and CurTime() > ply.infecteddelay then     
+    if respawnFurry == true and CurTime() > ply.infecteddelay then  
+        ply:initTeam( TEAM_FURRY )   
+        ply:Spawn()    
+    end
+
+    -- Respawn Delay
+    if respawnFurry == false and CurTime() > ply.infecteddelay then  
+        ply:initTeam( TEAM_WAITING )   
         ply:Spawn()    
     end
 
@@ -145,7 +145,7 @@ end )
 
 -- End Round
 concommand.Add( "yz_end", function( ply, cmd, args )
-    roundEnd('The Furry Spirit')
+    roundEnd('No One')
 	print( "Ended Round" )
 end )
 
@@ -169,9 +169,19 @@ concommand.Add( "yz_ss", function( ply, cmd, args, str )
 end )
 
 -- Team
-concommand.Add( "yz_team", function( ply, cmd, args, str )
-    ply:Spawn()
-    ply:initTeam(args[1])
+concommand.Add( "team_f", function( ply, cmd, args, str )
+    ply:initTeam( TEAM_FURRY ) 
+    ply:Spawn()   
+end )
+
+concommand.Add( "team_n", function( ply, cmd, args, str )
+    ply:initTeam( TEAM_NORMIE ) 
+    ply:Spawn()   
+end )
+
+concommand.Add( "team_ac", function( ply, cmd, args, str )
+    ply:initTeam( TEAM_AC )    
+    ply:Spawn()   
 end )
 
 -- Stats
@@ -181,7 +191,7 @@ end )
 
 -- Spawns
 concommand.Add( "yz_spawn_debug", function( ply, cmd, args, str )
-    local spawns = ents.FindByClass( "info_player_start" )
+    local spawns = ents.FindByClass( "info_n_spawn" )
     for k, sp in pairs(spawns) do
         print(sp)
     end

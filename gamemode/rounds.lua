@@ -62,12 +62,13 @@ function roundStart()
         -- Spawn Players
         for k,ply in pairs(player.GetAll()) do
             ply:SendLua('surface.PlaySound("round/start_zom.mp3")')
-            ply:Spawn()
+            ply:initTeam( autoBalance( ply ) )
+            ply:SetupHands()
         end
 
         -- After Spawn Inits 
         lastHuman = false
-        furrySpawn = true
+        respawnFurry = true
 
         -- Round Timer
         roundTimer = CurTime() + roundTime
@@ -131,6 +132,7 @@ function roundCheck()
     local hAlive = nAlive + acAlive
 
     -- if(fAlive == 0) then roundEnd("Animal Control") end
+    if(table.Count( team.GetPlayers(TEAM_FURRY) ) < 1 ) then roundEnd("Normies") end
     if(CurTime() > roundTimer ) then roundEnd("Normies") end
     if(acAlive == 0 && nAlive == 0) then roundEnd("FurrGang") end
 
@@ -158,7 +160,6 @@ function roundEnd(winners)
 
     -- Change Round State
     roundActive = false
-    furrySpawn = false
     roundStarted = false
 
     -- Sound Stop
@@ -178,17 +179,20 @@ function roundEnd(winners)
 
     timer.Simple(10, function()
 
+        respawnFurry = false
+
         -- Cleanup
         game.CleanUpMap( false, {} )
 
         -- Reset Kills
         resetKills()
-
+        
         -- Spawn Players
         for k, ply in pairs(player.GetAll()) do
+            ply:initTeam( 0 )
+            ply:StripWeapons()
             ply:SetupHands()
             ply:Spawn()
-            ply:StripWeapons()
         end     
         
         game.SetTimeScale( 1 )
@@ -209,7 +213,7 @@ function autoBalance( ply )
     if(chosen == ply) then
         return 1
     else
-            return math.random(2, 3)
+        return math.random(2, 3)
     end
   
 

@@ -14,6 +14,14 @@ local ranks = {
 -- Add Tag to Chat
 function ChatPrefixes(ply, text, teamChat, isDead)
 
+    cmd = string.Explode(" ", text)
+    
+    if(cmd[1] == "!me`") then 
+        table.remove( cmd, 1 )
+        chat.AddText(Color(150, 255, 150, 255), ply:Nick(), " ", table.concat(cmd, " ")) 
+        return true 
+    end
+
     group = ply:GetUserGroup()
 
 

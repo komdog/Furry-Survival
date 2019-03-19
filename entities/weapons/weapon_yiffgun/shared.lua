@@ -17,12 +17,12 @@ SWEP.AdminOnly		= false
 
 SWEP.Primary.ClipSize		= -1			-- Size of a clip
 SWEP.Primary.DefaultClip	= -1		-- Default number of bullets in a clip
-SWEP.Primary.Automatic		= false		-- Automatic/Semi Auto
+SWEP.Primary.Automatic		= true		-- Automatic/Semi Auto
 SWEP.Primary.Ammo			= "none"
 
 SWEP.Secondary.ClipSize		= -1			-- Size of a clip
 SWEP.Secondary.DefaultClip	= -1		-- Default number of bullets in a clip
-SWEP.Secondary.Automatic		= true		-- Automatic/Semi Auto
+SWEP.Secondary.Automatic	= false		-- Automatic/Semi Auto
 SWEP.Secondary.Ammo			= "none"
 
 

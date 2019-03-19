@@ -9,7 +9,8 @@ if( SERVER ) then
 
     function upGrade(attacker)
 
-        if(attacker:Team() == 1) then return end
+        if not (attacker) then return end
+        if(attacker:Team() == TEAM_FURRY) then return end
 
         attacker.kills = attacker.kills + 1
         attacker:SetNWInt("kills", attacker.kills)
@@ -28,31 +29,7 @@ if( SERVER ) then
         end
 
         return
-        -- for k, ply in pairs( playe r.GetAll() ) do
-        --     ply:SetNWInt("kills", ply.kills)
-        --     if(ply.kills == 5 ) then
 
-        --         if (ply:HasWeapon("yz_deagle")) then return end
-        --         ply:Give("yz_deagle") 
-        --         ply:GiveAmmo(200, "SMG1")
-        --         ply:EmitSound("player/wep_upgrade.wav")
-        
-        --     elseif(ply.kills == 10 ) then
-
-        --         if (ply:HasWeapon("weapon_ar2")) then return end
-        --         ply:Give("weapon_ar2")
-        --         ply:GiveAmmo(200, "AR2")
-        --         ply:EmitSound("player/wep_upgrade.wav")
-
-        --     elseif(ply.kills == 15 ) then
-
-        --         if (ply:HasWeapon("yz_m3")) then return end
-        --         ply:Give("yz_m3")
-        --         ply:GiveAmmo(200, "AR2")
-        --         ply:EmitSound("player/wep_upgrade.wav")
-
-        --     end
-        -- end
     end
 
 

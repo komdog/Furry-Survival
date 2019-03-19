@@ -104,6 +104,7 @@ net.Receive("timertick", function()
 		time = net.ReadInt(10)
 	end)
 
+	if(time == nil) then time = 0 end
 	if(time > 0) then time = time - 1 end
 
 	hook.Add("HUDPaint", "draw Timer", function()

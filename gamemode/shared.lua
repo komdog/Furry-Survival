@@ -2,6 +2,7 @@ GM.Name = "Furry Survival"
 GM.Author = "KomDog"
 GM.Email = "N/A"
 GM.Website = "https://komdog.club"
+GM.TeamBased = true
 
 function GM:Initialize()
     self.BaseClass.Initialize(self)
